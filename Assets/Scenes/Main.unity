@@ -820,7 +820,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e673f993d04214faeff26d06551cdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fruits: []
+  Fruits:
+  - {fileID: 6492087327022821252, guid: 3d60f5892627aba4995d6982ada90f05, type: 3}
+  - {fileID: 5524204434957022345, guid: 49c27e55201a1434f9f8f2ec701052b5, type: 3}
+  - {fileID: 4056924087426595474, guid: da72b480be2989b43927ba3162ba11a8, type: 3}
+  - {fileID: 81882705436219055, guid: deec6731f200ccc45a7ffbe5d948e64d, type: 3}
+  - {fileID: 3176994604734391034, guid: cc66a846a0280874badc3ac4c95718f7, type: 3}
+  - {fileID: 4408676454471588249, guid: 598ec9c6bb3d7af4d9d4216ffdcfda10, type: 3}
+  - {fileID: 7964636064191408184, guid: fac24038703d73247945fd0edc1256b5, type: 3}
+  - {fileID: 1306157526562310835, guid: 6a3686a3366b24c4990b8edac78754e9, type: 3}
+  - {fileID: 733368908233205116, guid: 9b316d5da2ca0bf498452b1d120a2eb9, type: 3}
+  - {fileID: 4775512656238189023, guid: 4097687b347dcfe40800bc6022cb4b27, type: 3}
+  - {fileID: 3801683110521830402, guid: b55bc6b11cff2eb4da16465fbafd57c1, type: 3}
   ScoreElement: {fileID: 1562026264}
   GameOverPopup: {fileID: 2146636756}
   FinalScoreElement: {fileID: 1861308207}
