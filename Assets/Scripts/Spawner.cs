@@ -3,19 +3,19 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-// TODO: create variable for rigidbody instead of using getcomponent in update
-
 public class Spawner : MonoBehaviour
 {
     public Transform[] Fruits;
 
     public Transform ScoreElement;
-    public GameObject GameOverPopup;//
-    public Transform FinalScoreElement;//
+    public GameObject GameOverPopup;
+    public Transform FinalScoreElement;
 
     private static TextMeshProUGUI scoreText;
-    private static TextMeshProUGUI finalScoreText;//
-    private static GameObject gameOverPopup;//
+    private static TextMeshProUGUI finalScoreText;
+    private static GameObject gameOverPopup;
+
+    private Rigidbody2D catRigidBody;
     
     public enum SpawnedState
     {
@@ -39,14 +39,15 @@ public class Spawner : MonoBehaviour
     {
         score += points;
         scoreText.text = "Score: " + score;
-        finalScoreText.text = "Score: " + score;//
+        finalScoreText.text = "Score: " + score;
     }
 
     void Start()
     {
         scoreText = ScoreElement.GetComponent<TextMeshProUGUI>();
-        finalScoreText = FinalScoreElement.GetComponent<TextMeshProUGUI>();//
-        gameOverPopup = GameOverPopup;//
+        finalScoreText = FinalScoreElement.GetComponent<TextMeshProUGUI>();
+        gameOverPopup = GameOverPopup;
+        catRigidBody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -58,39 +59,49 @@ public class Spawner : MonoBehaviour
         if (Input.GetKey("a"))
         {
             // spawner cat moves left when a is pressed
-            GetComponent<Rigidbody2D>().velocity = new Vector2(-4, 0);
+            catRigidBody.velocity = new Vector2(-4, 0);
         }
         else if (Input.GetKey("d"))
         {
             // spawner cat moves right when d is pressed
-            GetComponent<Rigidbody2D>().velocity = new Vector2(4, 0);
+            catRigidBody.velocity = new Vector2(4, 0);
         }
         else
         {
             // if neither are pressed, stop spawner cat from moving
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            catRigidBody.velocity = new Vector2(0, 0);
         }
 
         // handle stopping spawner cat movement at the edges of the box
-        if (GetComponent<Rigidbody2D>().velocity.x < 0 && transform.position.x < -2.5)
+        if (catRigidBody.velocity.x < 0 && transform.position.x < -2.5)
         {
             // stop spawner cat from moving to far to the left
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            catRigidBody.velocity = new Vector2(0, 0);
         }
-        else if (GetComponent<Rigidbody2D>().velocity.x > 0 && transform.position.x > 2.5)
+        else if (catRigidBody.velocity.x > 0 && transform.position.x > 2.5)
         {
             // stop spawner cat from moving to far to the right
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            catRigidBody.velocity = new Vector2(0, 0);
         }
 
         CloudPosition = transform.position;
         
-        if (Input.GetKeyDown("space") && SpawnedYet == SpawnedState.Yes && IsGameOver == false)//end (add gameover clause)
+        if (Input.GetKeyDown("space") && SpawnedYet == SpawnedState.Yes && IsGameOver == false)
         {
             SpawnedYet = SpawnedState.No;
         }
     }
     
+    private IEnumerator spawnTimer()
+    {
+        // wait 0.75 seconds between dropping fruit and spawning new fruit
+        yield return new WaitForSeconds(0.75f);
+
+        int randomIndex = Random.Range(0, BestFruit - 1);
+        Instantiate(Fruits[randomIndex], transform.position, Fruits[0].rotation);
+        SpawnedYet = SpawnedState.Yes;
+    }
+
     private void spawnFruit()
     {
         if (SpawnedYet == SpawnedState.No)
@@ -111,21 +122,12 @@ public class Spawner : MonoBehaviour
             Instantiate(Fruits[NewFruitIndex], SpawnPosition, Fruits[0].rotation);
             IncreaseScore(Points[NewFruitIndex]);
 
+
             if (NewFruitIndex > BestFruit && NewFruitIndex < 7)
             {
                 BestFruit = NewFruitIndex;
             }
         }
-    }
-
-    // wait 0.75 seconds between dropping fruit and spawning new fruit
-    private IEnumerator spawnTimer()
-    {
-        yield return new WaitForSeconds(0.75f);
-
-        int randInd = Random.Range(0, BestFruit - 1);
-        Instantiate(Fruits[randInd], transform.position, Fruits[0].rotation);
-        SpawnedYet = SpawnedState.Yes;
     }
     
     public static void EndGame()
